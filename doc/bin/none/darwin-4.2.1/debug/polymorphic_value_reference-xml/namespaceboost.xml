@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="namespaceboost" kind="namespace" language="C++">
+    <compoundname>boost</compoundname>
+    <innerclass refid="classboost_1_1bad__polymorphic__value__construction" prot="public">boost::bad_polymorphic_value_construction</innerclass>
+    <innerclass refid="structboost_1_1default__copy" prot="public">boost::default_copy</innerclass>
+    <innerclass refid="structboost_1_1default__delete" prot="public">boost::default_delete</innerclass>
+    <innerclass refid="classboost_1_1polymorphic__value" prot="public">boost::polymorphic_value</innerclass>
+    <innernamespace refid="namespaceboost_1_1detail">boost::detail</innernamespace>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="namespaceboost_1a860a5365a693aef0928bada9f908a3d8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+          <param>
+            <type>class...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type><ref refid="classboost_1_1polymorphic__value" kindref="compound">polymorphic_value</ref>&lt; T &gt;</type>
+        <definition>polymorphic_value&lt;T&gt; boost::make_polymorphic_value</definition>
+        <argsstring>(Ts &amp;&amp;... ts)</argsstring>
+        <name>make_polymorphic_value</name>
+        <param>
+          <type>Ts &amp;&amp;...</type>
+          <declname>ts</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" line="442" column="1" bodyfile="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" bodystart="442" bodyend="448"/>
+      </memberdef>
+      <memberdef kind="function" id="namespaceboost_1aa27962b03a546a15ba095866a3bd1f39" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class T</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void boost::swap</definition>
+        <argsstring>(polymorphic_value&lt; T &gt; &amp;t, polymorphic_value&lt; T &gt; &amp;u) noexcept</argsstring>
+        <name>swap</name>
+        <param>
+          <type><ref refid="classboost_1_1polymorphic__value" kindref="compound">polymorphic_value</ref>&lt; T &gt; &amp;</type>
+          <declname>t</declname>
+        </param>
+        <param>
+          <type><ref refid="classboost_1_1polymorphic__value" kindref="compound">polymorphic_value</ref>&lt; T &gt; &amp;</type>
+          <declname>u</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" line="455" column="1" bodyfile="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" bodystart="455" bodyend="457"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" line="34" column="1"/>
+  </compounddef>
+</doxygen>

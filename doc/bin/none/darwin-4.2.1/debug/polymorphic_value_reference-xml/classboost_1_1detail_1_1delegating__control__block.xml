@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="classboost_1_1detail_1_1delegating__control__block" kind="class" language="C++" prot="public">
+    <compoundname>boost::detail::delegating_control_block</compoundname>
+    <basecompoundref refid="structboost_1_1detail_1_1control__block" prot="public" virt="non-virtual">boost::detail::control_block&lt; T &gt;</basecompoundref>
+    <includes refid="polymorphic__value_8hpp" local="no">polymorphic_value.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>class T</type>
+      </param>
+      <param>
+        <type>class U</type>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classboost_1_1detail_1_1delegating__control__block_1a7cda07ec82008697a622fe87ae3e39db" prot="private" static="no" mutable="no">
+        <type>std::unique_ptr&lt; <ref refid="structboost_1_1detail_1_1control__block" kindref="compound">control_block</ref>&lt; U &gt; &gt;</type>
+        <definition>std::unique_ptr&lt;control_block&lt;U&gt; &gt; boost::detail::delegating_control_block&lt; T, U &gt;::delegate_</definition>
+        <argsstring></argsstring>
+        <name>delegate_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" line="116" column="1" bodyfile="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" bodystart="113" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classboost_1_1detail_1_1delegating__control__block_1a8b39d0bcef1af69005e8aba7c922fcc4" prot="public" static="no" const="no" explicit="yes" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>boost::detail::delegating_control_block&lt; T, U &gt;::delegating_control_block</definition>
+        <argsstring>(std::unique_ptr&lt; control_block&lt; U &gt;&gt; b)</argsstring>
+        <name>delegating_control_block</name>
+        <param>
+          <type>std::unique_ptr&lt; <ref refid="structboost_1_1detail_1_1control__block" kindref="compound">control_block</ref>&lt; U &gt;&gt;</type>
+          <declname>b</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" line="119" column="1" bodyfile="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" bodystart="119" bodyend="120"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1detail_1_1delegating__control__block_1af4877802579b27692b1570568cedd577" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="virtual">
+        <type>std::unique_ptr&lt; <ref refid="structboost_1_1detail_1_1control__block" kindref="compound">control_block</ref>&lt; T &gt; &gt;</type>
+        <definition>std::unique_ptr&lt;control_block&lt;T&gt; &gt; boost::detail::delegating_control_block&lt; T, U &gt;::clone</definition>
+        <argsstring>() const override</argsstring>
+        <name>clone</name>
+        <reimplements refid="structboost_1_1detail_1_1control__block_1ab790de15c5eab1d8acf944ab7a9776f8">clone</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" line="122" column="1" bodyfile="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" bodystart="122" bodyend="124"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1detail_1_1delegating__control__block_1ad2f1daa45e6c9588202498603755bfef" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>T *</type>
+        <definition>T* boost::detail::delegating_control_block&lt; T, U &gt;::ptr</definition>
+        <argsstring>() override</argsstring>
+        <name>ptr</name>
+        <reimplements refid="structboost_1_1detail_1_1control__block_1a6524ad57ad87ca537a900758df48a27d">ptr</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" line="126" column="1" bodyfile="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" bodystart="126" bodyend="126"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="14">
+        <label>boost::detail::control_block&lt; T &gt;</label>
+        <link refid="structboost_1_1detail_1_1control__block"/>
+      </node>
+      <node id="13">
+        <label>boost::detail::delegating_control_block&lt; T, U &gt;</label>
+        <link refid="classboost_1_1detail_1_1delegating__control__block"/>
+        <childnode refid="14" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="16">
+        <label>boost::detail::control_block&lt; T &gt;</label>
+        <link refid="structboost_1_1detail_1_1control__block"/>
+      </node>
+      <node id="15">
+        <label>boost::detail::delegating_control_block&lt; T, U &gt;</label>
+        <link refid="classboost_1_1detail_1_1delegating__control__block"/>
+        <childnode refid="16" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" line="112" column="1" bodyfile="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" bodystart="112" bodyend="127"/>
+    <listofallmembers>
+      <member refid="classboost_1_1detail_1_1delegating__control__block_1af4877802579b27692b1570568cedd577" prot="public" virt="virtual"><scope>boost::detail::delegating_control_block</scope><name>clone</name></member>
+      <member refid="classboost_1_1detail_1_1delegating__control__block_1a7cda07ec82008697a622fe87ae3e39db" prot="private" virt="non-virtual"><scope>boost::detail::delegating_control_block</scope><name>delegate_</name></member>
+      <member refid="classboost_1_1detail_1_1delegating__control__block_1a8b39d0bcef1af69005e8aba7c922fcc4" prot="public" virt="non-virtual"><scope>boost::detail::delegating_control_block</scope><name>delegating_control_block</name></member>
+      <member refid="classboost_1_1detail_1_1delegating__control__block_1ad2f1daa45e6c9588202498603755bfef" prot="public" virt="virtual"><scope>boost::detail::delegating_control_block</scope><name>ptr</name></member>
+      <member refid="structboost_1_1detail_1_1control__block_1a3e439e19745df436c653f40b7a4d657c" prot="public" virt="virtual"><scope>boost::detail::delegating_control_block</scope><name>~control_block</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="classboost_1_1detail_1_1direct__control__block" kind="class" language="C++" prot="public">
+    <compoundname>boost::detail::direct_control_block</compoundname>
+    <basecompoundref refid="structboost_1_1detail_1_1control__block" prot="public" virt="non-virtual">boost::detail::control_block&lt; T &gt;</basecompoundref>
+    <includes refid="polymorphic__value_8hpp" local="no">polymorphic_value.hpp</includes>
+    <templateparamlist>
+      <param>
+        <type>class T</type>
+      </param>
+      <param>
+        <type>class U</type>
+        <defval>T</defval>
+      </param>
+    </templateparamlist>
+      <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classboost_1_1detail_1_1direct__control__block_1a0ec462648d845bbe52385ba905c219c8" prot="private" static="no" mutable="no">
+        <type>U</type>
+        <definition>U boost::detail::direct_control_block&lt; T, U &gt;::u_</definition>
+        <argsstring></argsstring>
+        <name>u_</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" line="73" column="1" bodyfile="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="classboost_1_1detail_1_1direct__control__block_1a8863aed97dfe1bdf25be00e764329bdd" prot="public" static="no" const="no" explicit="yes" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class...</type>
+            <declname>Ts</declname>
+            <defname>Ts</defname>
+          </param>
+        </templateparamlist>
+        <type></type>
+        <definition>boost::detail::direct_control_block&lt; T, U &gt;::direct_control_block</definition>
+        <argsstring>(Ts &amp;&amp;... ts)</argsstring>
+        <name>direct_control_block</name>
+        <param>
+          <type>Ts &amp;&amp;...</type>
+          <declname>ts</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" line="77" column="1" bodyfile="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" bodystart="77" bodyend="78"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1detail_1_1direct__control__block_1a3ca92d5e8759dad29233afc1f09f554e" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="virtual">
+        <type>std::unique_ptr&lt; <ref refid="structboost_1_1detail_1_1control__block" kindref="compound">control_block</ref>&lt; T &gt; &gt;</type>
+        <definition>std::unique_ptr&lt;control_block&lt;T&gt; &gt; boost::detail::direct_control_block&lt; T, U &gt;::clone</definition>
+        <argsstring>() const override</argsstring>
+        <name>clone</name>
+        <reimplements refid="structboost_1_1detail_1_1control__block_1ab790de15c5eab1d8acf944ab7a9776f8">clone</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" line="80" column="1" bodyfile="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" bodystart="80" bodyend="82"/>
+      </memberdef>
+      <memberdef kind="function" id="classboost_1_1detail_1_1direct__control__block_1a82de67a30315bc3d9a1b45499a508bde" prot="public" static="no" const="no" explicit="no" inline="yes" virt="virtual">
+        <type>T *</type>
+        <definition>T* boost::detail::direct_control_block&lt; T, U &gt;::ptr</definition>
+        <argsstring>() override</argsstring>
+        <name>ptr</name>
+        <reimplements refid="structboost_1_1detail_1_1control__block_1a6524ad57ad87ca537a900758df48a27d">ptr</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" line="84" column="1" bodyfile="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" bodystart="84" bodyend="84"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="18">
+        <label>boost::detail::control_block&lt; T &gt;</label>
+        <link refid="structboost_1_1detail_1_1control__block"/>
+      </node>
+      <node id="17">
+        <label>boost::detail::direct_control_block&lt; T, U &gt;</label>
+        <link refid="classboost_1_1detail_1_1direct__control__block"/>
+        <childnode refid="18" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="20">
+        <label>boost::detail::control_block&lt; T &gt;</label>
+        <link refid="structboost_1_1detail_1_1control__block"/>
+      </node>
+      <node id="19">
+        <label>boost::detail::direct_control_block&lt; T, U &gt;</label>
+        <link refid="classboost_1_1detail_1_1direct__control__block"/>
+        <childnode refid="20" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" line="68" column="1" bodyfile="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" bodystart="68" bodyend="85"/>
+    <listofallmembers>
+      <member refid="classboost_1_1detail_1_1direct__control__block_1a3ca92d5e8759dad29233afc1f09f554e" prot="public" virt="virtual"><scope>boost::detail::direct_control_block</scope><name>clone</name></member>
+      <member refid="classboost_1_1detail_1_1direct__control__block_1a8863aed97dfe1bdf25be00e764329bdd" prot="public" virt="non-virtual"><scope>boost::detail::direct_control_block</scope><name>direct_control_block</name></member>
+      <member refid="classboost_1_1detail_1_1direct__control__block_1a82de67a30315bc3d9a1b45499a508bde" prot="public" virt="virtual"><scope>boost::detail::direct_control_block</scope><name>ptr</name></member>
+      <member refid="classboost_1_1detail_1_1direct__control__block_1a0ec462648d845bbe52385ba905c219c8" prot="private" virt="non-virtual"><scope>boost::detail::direct_control_block</scope><name>u_</name></member>
+      <member refid="structboost_1_1detail_1_1control__block_1a3e439e19745df436c653f40b7a4d657c" prot="public" virt="virtual"><scope>boost::detail::direct_control_block</scope><name>~control_block</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,498 @@
+<?xml version="1.0"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<chapter xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" id="polymorphic_value" rev:last-revision="$Date: 2018/06/21 07:45:53 $">
+  <chapterinfo><author>
+      <firstname>Jonathan</firstname> <surname>Coe</surname>
+    </author><copyright>
+      <year>2017</year> <holder>Jonathan Coe</holder>
+    </copyright><legalnotice id="polymorphic_value.legal">
+      <para>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <ulink url="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</ulink>)
+      </para>
+    </legalnotice></chapterinfo>
+  <title>Boost.PolymorphicValue (Proposed)</title>
+  <section id="boost_polymorphicvalue__proposed_.introduction">
+    <title><link linkend="boost_polymorphicvalue__proposed_.introduction">Introduction</link></title>
+    <para>
+      Class template <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput>
+      represents a polymorphic object with value-semantics.
+    </para>
+    <bridgehead renderas="sect3" id="boost_polymorphicvalue__proposed_.introduction.h0">
+      <phrase id="boost_polymorphicvalue__proposed_.introduction.problem"/><link linkend="boost_polymorphicvalue__proposed_.introduction.problem">Problem</link>
+    </bridgehead>
+    <para>
+      Suppose we want to design a class in terms of polymorphic components and have
+      the compiler correctly generate the special member functions: destructor, copy
+      constructor, copy assignment operator, move constructor and move assignment
+      operator.
+    </para>
+    <bridgehead renderas="sect3" id="boost_polymorphicvalue__proposed_.introduction.h1">
+      <phrase id="boost_polymorphicvalue__proposed_.introduction.solution"/><link linkend="boost_polymorphicvalue__proposed_.introduction.solution">Solution</link>
+    </bridgehead>
+    <para>
+      This is how one would write a class made of polymorphic components using <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput>:
+    </para>
+<programlisting xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="preprocessor">#include</phrase> <phrase role="special">&lt;</phrase><phrase role="identifier">boost</phrase><phrase role="special">/</phrase><phrase role="identifier">polymorphic_value</phrase><phrase role="special">.</phrase><phrase role="identifier">hpp</phrase><phrase role="special">&gt;</phrase>
+<phrase role="preprocessor">#include</phrase> <phrase role="special">&lt;</phrase><phrase role="identifier">vector</phrase><phrase role="special">&gt;</phrase>
+
+<phrase role="keyword">class</phrase> <phrase role="identifier">Zoo</phrase> <phrase role="special">{</phrase>
+  <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">Animal</phrase><phrase role="special">&gt;&gt;</phrase> <phrase role="identifier">animals_</phrase><phrase role="special">;</phrase>
+ <phrase role="keyword">public</phrase><phrase role="special">:</phrase>
+  <phrase role="identifier">Zoo</phrase><phrase role="special">()</phrase> <phrase role="special">=</phrase> <phrase role="keyword">default</phrase><phrase role="special">;</phrase>
+  <phrase role="identifier">Zoo</phrase><phrase role="special">(</phrase><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">Animal</phrase><phrase role="special">&gt;&gt;</phrase> <phrase role="identifier">animals</phrase><phrase role="special">)</phrase> <phrase role="special">:</phrase>
+      <phrase role="identifier">animals_</phrase><phrase role="special">(</phrase><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">move</phrase><phrase role="special">(</phrase><phrase role="identifier">animals</phrase><phrase role="special">))</phrase> <phrase role="special">{}</phrase>
+
+  <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">size_t</phrase> <phrase role="identifier">size</phrase><phrase role="special">()</phrase> <phrase role="keyword">const</phrase> <phrase role="special">{</phrase>
+    <phrase role="keyword">return</phrase> <phrase role="identifier">animals_</phrase><phrase role="special">.</phrase><phrase role="identifier">size</phrase><phrase role="special">();</phrase>
+  <phrase role="special">}</phrase>
+
+  <phrase role="keyword">const</phrase> <phrase role="identifier">Animal</phrase><phrase role="special">&amp;</phrase> <phrase role="keyword">operator</phrase><phrase role="special">[](</phrase><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">size_t</phrase> <phrase role="identifier">i</phrase><phrase role="special">)</phrase> <phrase role="keyword">const</phrase> <phrase role="special">{</phrase>
+    <phrase role="keyword">return</phrase> <phrase role="special">*</phrase><phrase role="identifier">animals_</phrase><phrase role="special">[</phrase><phrase role="identifier">i</phrase><phrase role="special">];</phrase>
+  <phrase role="special">}</phrase>
+
+  <phrase role="identifier">Animal</phrase><phrase role="special">&amp;</phrase> <phrase role="keyword">operator</phrase><phrase role="special">[](</phrase><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">size_t</phrase> <phrase role="identifier">i</phrase><phrase role="special">)</phrase> <phrase role="special">{</phrase>
+    <phrase role="keyword">return</phrase> <phrase role="special">*</phrase><phrase role="identifier">animals_</phrase><phrase role="special">[</phrase><phrase role="identifier">i</phrase><phrase role="special">];</phrase>
+  <phrase role="special">}</phrase>
+
+  <phrase role="keyword">void</phrase> <phrase role="identifier">AddAnimal</phrase><phrase role="special">(</phrase><phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">Animal</phrase><phrase role="special">&gt;</phrase> <phrase role="identifier">animal</phrase><phrase role="special">)</phrase> <phrase role="special">{</phrase>
+    <phrase role="identifier">animals_</phrase><phrase role="special">.</phrase><phrase role="identifier">push_back</phrase><phrase role="special">(</phrase><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">move</phrase><phrase role="special">(</phrase><phrase role="identifier">animal</phrase><phrase role="special">));</phrase>
+  <phrase role="special">}</phrase>
+<phrase role="special">}</phrase>
+</programlisting>
+  </section>
+  <section id="boost_polymorphicvalue__proposed_.tutorial">
+    <title><link linkend="boost_polymorphicvalue__proposed_.tutorial">Tutorial</link></title>
+    <section id="boost_polymorphicvalue__proposed_.tutorial.motivation">
+      <title><link linkend="boost_polymorphicvalue__proposed_.tutorial.motivation">Motivation</link></title>
+      <para>
+        Object-oriented programming allows objects to be composed of other objects.
+        A class heirarchy of <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">Shape</phrase></computeroutput>s
+        might lead to a <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">Picture</phrase></computeroutput> class
+        being a collection of <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">Shape</phrase></computeroutput>s
+        and their respective positions.
+      </para>
+      <para>
+        When components are stored as values, the compiler is able to generate special
+        member functions: destructor, copy constructor, copy assignment operator,
+        move constructor and move assignment operator.
+      </para>
+      <para>
+        Storing components as values means that the type of the component must be
+        known at compile time. For cases when components are base classes from an
+        inheritance heirarchy - like <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">Shape</phrase></computeroutput>s
+        in a <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">Picture</phrase></computeroutput> - we are unable
+        to store components as values and will have to implement special member functions
+        ourselves.
+      </para>
+      <para>
+        <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput> is a class
+        template that imparts value semantics to a polymorphic object. Use of it
+        allows design of a composite object in terms of abstract or base class objects
+        without the need to implement (and maintain) special member functions.
+      </para>
+<programlisting xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">class</phrase> <phrase role="identifier">Shape</phrase><phrase role="special">;</phrase>
+<phrase role="keyword">class</phrase> <phrase role="identifier">Picture</phrase> <phrase role="special">{</phrase>
+  <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">Shape</phrase><phrase role="special">&gt;&gt;</phrase> <phrase role="identifier">components_</phrase><phrase role="special">;</phrase>
+  <phrase role="comment">// ...</phrase>
+<phrase role="special">};</phrase>
+</programlisting>
+    </section>
+    <section id="boost_polymorphicvalue__proposed_.tutorial.design_overview">
+      <title><link linkend="boost_polymorphicvalue__proposed_.tutorial.design_overview">Design
+      Overview</link></title>
+      <para>
+        A <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput> member
+        can be used with the same syntax one would use for a pointer member: <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">operator</phrase><phrase role="special">-&gt;</phrase></computeroutput>
+        and <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">operator</phrase><phrase role="special">*</phrase></computeroutput>
+        will respectively return a pointer and a reference. Like a pointer, <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput> can be null so should
+        probably be initialised within the parent object constructor.
+      </para>
+      <para>
+        <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput> has value
+        semantics: when copied, it will perform a deep copy of the owned object,
+        and it propagates <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">const</phrase></computeroutput> to the
+        owned object.
+      </para>
+      <bridgehead renderas="sect4" id="boost_polymorphicvalue__proposed_.tutorial.design_overview.h0">
+        <phrase id="boost_polymorphicvalue__proposed_.tutorial.design_overview.deep_copies"/><link linkend="boost_polymorphicvalue__proposed_.tutorial.design_overview.deep_copies">Deep
+        copies</link>
+      </bridgehead>
+      <para>
+        <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput> enables
+        deep-copies through inheritance heirarchies: a <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">Shape</phrase><phrase role="special">&gt;</phrase></computeroutput> initialized with a <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">Circle</phrase></computeroutput>
+        object will produce a <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">Shape</phrase><phrase role="special">&gt;</phrase></computeroutput> managing a copy of the <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">Circle</phrase></computeroutput> object produced using <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">Circle</phrase></computeroutput>'s copy constructor.
+      </para>
+      <para>
+        Virtual destructors can be used to ensure that a derived class object is
+        correctly destroyed through a base class pointer. C++ offers no equivalent
+        of virtual destructors for copy construction; <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput>
+        uses type-erasure to store type information about the managed object and
+        call the copy constructor when required. Note that virtual destructors are
+        not needed for <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput>
+        as the type-erasure mechanism used to produce copies is also used to call
+        the correct derived class destructor.
+      </para>
+      <bridgehead renderas="sect4" id="boost_polymorphicvalue__proposed_.tutorial.design_overview.h1">
+        <phrase id="boost_polymorphicvalue__proposed_.tutorial.design_overview.const_propagation"/><link linkend="boost_polymorphicvalue__proposed_.tutorial.design_overview.const_propagation">Const-propagation</link>
+      </bridgehead>
+      <para>
+        As <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput> is intended
+        to be used to model a value-type, a <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">const</phrase></computeroutput>
+        <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">T</phrase><phrase role="special">&gt;</phrase></computeroutput> will
+        only give access to a <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">const</phrase> <phrase role="identifier">T</phrase><phrase role="special">&amp;</phrase></computeroutput>
+        and <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">const</phrase> <phrase role="identifier">T</phrase><phrase role="special">*</phrase></computeroutput>. For non-<computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">const</phrase></computeroutput>
+        access, a non-<computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">const</phrase></computeroutput> <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">T</phrase><phrase role="special">&gt;</phrase></computeroutput> is
+        needed.
+      </para>
+      <para>
+        For design of component-based objects, const-propagation is required as no
+        part of a contextually immutable object should be mutable. Where access to
+        a mutable <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">T</phrase><phrase role="special">&gt;</phrase></computeroutput>
+        is truly required from a <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">const</phrase></computeroutput>
+        access path, a <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">mutable</phrase> <phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">T</phrase><phrase role="special">&gt;</phrase></computeroutput>
+        member can be used (this should be rare).
+      </para>
+      <bridgehead renderas="sect4" id="boost_polymorphicvalue__proposed_.tutorial.design_overview.h2">
+        <phrase id="boost_polymorphicvalue__proposed_.tutorial.design_overview.default_construction_and_a_null_state"/><link linkend="boost_polymorphicvalue__proposed_.tutorial.design_overview.default_construction_and_a_null_state">Default
+        construction and a null state</link>
+      </bridgehead>
+      <para>
+        <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput> is intended
+        to be used with Standard Library collections which requires that it is default
+        constructible. As <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">T</phrase><phrase role="special">&gt;</phrase></computeroutput>
+        can be instantiated for an abstract class <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">T</phrase></computeroutput>,
+        the default constructor cannot, in general, default construct the managed
+        object. There may also be cases where default construction of the managed
+        object would be undesirably expensive in terms of memory or speed.
+      </para>
+      <para>
+        The default constructor puts <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput>
+        in an empty state where no object is managed. Both <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">operator</phrase><phrase role="special">-&gt;</phrase></computeroutput> and <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">operator</phrase><phrase role="special">*</phrase></computeroutput> have preconditions where calling them on
+        an empty <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput>
+        is prohibited. An <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">explicit</phrase></computeroutput>
+        <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">operator</phrase> <phrase role="keyword">bool</phrase></computeroutput>
+        is provided to allow idiomatic checking for a null state.
+      </para>
+      <bridgehead renderas="sect4" id="boost_polymorphicvalue__proposed_.tutorial.design_overview.h3">
+        <phrase id="boost_polymorphicvalue__proposed_.tutorial.design_overview.reference_stability"/><link linkend="boost_polymorphicvalue__proposed_.tutorial.design_overview.reference_stability">Reference
+        stability</link>
+      </bridgehead>
+      <para>
+        <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput> makes no
+        guarantees of the stability of pointers and references obtained from <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">operator</phrase><phrase role="special">-&gt;</phrase></computeroutput>
+        and <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">operator</phrase><phrase role="special">*</phrase></computeroutput>.
+        <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput> models
+        a value-type like optional or variant and may make use of a small object
+        optimization to avoid heap allocation for small objects. Such an optimisation
+        would render pointers and references to a managed object invalid after a
+        move operation. The result of <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">operator</phrase><phrase role="special">-&gt;</phrase></computeroutput> and <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">operator</phrase><phrase role="special">*</phrase></computeroutput> should be used directly, not cached for
+        later use.
+      </para>
+<programlisting xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="comment">// recommended use</phrase>
+<phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">Shape</phrase><phrase role="special">&gt;</phrase> <phrase role="identifier">pv</phrase><phrase role="special">(</phrase><phrase role="identifier">Circle</phrase><phrase role="special">(</phrase><phrase role="number">8</phrase><phrase role="special">));</phrase>
+<phrase role="identifier">foo</phrase><phrase role="special">(*</phrase><phrase role="identifier">pv</phrase><phrase role="special">);</phrase>
+<phrase role="keyword">double</phrase> <phrase role="identifier">area</phrase> <phrase role="special">=</phrase> <phrase role="identifier">pv</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">Area</phrase><phrase role="special">();</phrase>
+
+<phrase role="comment">// mis-use (pointer stability not guaranteed)</phrase>
+<phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">Shape</phrase><phrase role="special">&gt;</phrase> <phrase role="identifier">pv</phrase><phrase role="special">(</phrase><phrase role="identifier">Circle</phrase><phrase role="special">(</phrase><phrase role="number">8</phrase><phrase role="special">));</phrase>
+<phrase role="identifier">Shape</phrase><phrase role="special">*</phrase> <phrase role="identifier">s</phrase> <phrase role="special">=</phrase> <phrase role="identifier">pv</phrase><phrase role="special">.</phrase><phrase role="keyword">operator</phrase><phrase role="special">-&gt;();</phrase>
+<phrase role="identifier">foo</phrase><phrase role="special">(*</phrase><phrase role="identifier">pv</phrase><phrase role="special">);</phrase>
+<phrase role="keyword">double</phrase> <phrase role="identifier">area</phrase> <phrase role="special">=</phrase> <phrase role="identifier">s</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">Area</phrase><phrase role="special">();</phrase>
+</programlisting>
+      <para>
+        The unnatural looking code that one is required to write to cache a pointer
+        to a <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput>'s
+        managed object should be a suitable deterrent.
+      </para>
+    </section>
+    <section id="boost_polymorphicvalue__proposed_.tutorial.when_to_use__polymorphic_value_">
+      <title><link linkend="boost_polymorphicvalue__proposed_.tutorial.when_to_use__polymorphic_value_">When
+      to use <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput></link></title>
+      <para>
+        <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput> is designed
+        to be used in polymorphic component-based designs where the set of possible
+        component types is open to extension (open-set polymorphism).
+      </para>
+      <para>
+        <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput> introduces
+        a virtual function call into copy construction and memory indirection into
+        member function invocation. C++ advocates only paying for what you use so
+        we would advocate avoiding the unnecessary use of <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput>.
+      </para>
+      <para>
+        If a component design does not require polymorphic components then storing
+        components by value may be a better choice than using <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput>.
+      </para>
+      <para>
+        If a component design does not require mutable components then storing components
+        by <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">shared_ptr</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">const</phrase> <phrase role="identifier">T</phrase><phrase role="special">&gt;</phrase></computeroutput> may be a better choice than using <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput> (Note the <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">const</phrase></computeroutput>).
+      </para>
+      <para>
+        If a component design has component sub-types chosen from a known set of
+        sub-types, then an <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">variant</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">A</phrase><phrase role="special">,</phrase><phrase role="identifier">B</phrase><phrase role="special">,</phrase><phrase role="identifier">C</phrase><phrase role="special">&gt;</phrase></computeroutput>
+        may be a better choice than using <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput>.
+      </para>
+      <para>
+        If a component design requires an open or extensible set of component sub-types,
+        and mutability of components then <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput>
+        may be a good choice.
+      </para>
+    </section>
+    <section id="boost_polymorphicvalue__proposed_.tutorial.custom_copiers_and_deleters">
+      <title><link linkend="boost_polymorphicvalue__proposed_.tutorial.custom_copiers_and_deleters">Custom
+      copiers and deleters</link></title>
+      <para>
+        <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput> supports
+        the use of custom copiers and deleters through a raw-pointer constructor
+        where the <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput>
+        takes ownership of the pointer.
+      </para>
+<programlisting xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">template</phrase> <phrase role="special">&lt;</phrase><phrase role="keyword">class</phrase> <phrase role="identifier">U</phrase><phrase role="special">,</phrase>
+          <phrase role="keyword">class</phrase> <phrase role="identifier">C</phrase><phrase role="special">=</phrase><phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">default_copy</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">U</phrase><phrase role="special">&gt;,</phrase>
+          <phrase role="keyword">class</phrase> <phrase role="identifier">D</phrase><phrase role="special">=</phrase><phrase role="identifier">default_delete</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">U</phrase><phrase role="special">&gt;&gt;</phrase>
+          <phrase role="comment">// requires U* is convertible to T*</phrase>
+<phrase role="identifier">polymorphic_value</phrase><phrase role="special">(</phrase><phrase role="identifier">U</phrase><phrase role="special">*</phrase> <phrase role="identifier">u</phrase><phrase role="special">,</phrase> <phrase role="identifier">C</phrase> <phrase role="identifier">c</phrase> <phrase role="special">=</phrase> <phrase role="identifier">C</phrase><phrase role="special">{},</phrase> <phrase role="identifier">D</phrase> <phrase role="identifier">d</phrase> <phrase role="special">=</phrase> <phrase role="identifier">D</phrase><phrase role="special">{});</phrase>
+</programlisting>
+      <para>
+        This constructor is intended for situations where the copy constructor of
+        <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">U</phrase></computeroutput> and <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">delete</phrase>
+        <phrase role="identifier">U</phrase></computeroutput> are not appropriate choices.
+      </para>
+      <para>
+        When objects are created from a C-API there may be API-provided methods to
+        create, copy and delete objects. The pointer-constructor of polymorphic_value
+        would enable use of such objects.
+      </para>
+<programlisting xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="comment">// C-API pointer</phrase>
+<phrase role="keyword">struct</phrase> <phrase role="identifier">c_api_t</phrase><phrase role="special">;</phrase>
+<phrase role="keyword">using</phrase> <phrase role="identifier">c_api_p</phrase> <phrase role="special">=</phrase> <phrase role="identifier">c_api_t</phrase><phrase role="special">*;</phrase>
+
+<phrase role="comment">// C-API functions</phrase>
+<phrase role="identifier">c_api_p</phrase> <phrase role="identifier">c_api_object_create</phrase><phrase role="special">(</phrase><phrase role="keyword">int</phrase> <phrase role="identifier">arg</phrase><phrase role="special">);</phrase>
+<phrase role="identifier">c_api_p</phrase> <phrase role="identifier">c_api_object_copy</phrase><phrase role="special">(</phrase><phrase role="identifier">c_api_p</phrase> <phrase role="identifier">p</phrase><phrase role="special">);</phrase>
+<phrase role="keyword">void</phrase> <phrase role="identifier">c_api_object_dispose</phrase><phrase role="special">(</phrase><phrase role="identifier">c_api_p</phrase> <phrase role="identifier">p</phrase><phrase role="special">);</phrase>
+
+<phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">c_api_t</phrase><phrase role="special">&gt;</phrase> <phrase role="identifier">pv</phrase><phrase role="special">(</phrase>
+  <phrase role="identifier">c_api_object_create</phrase><phrase role="special">(</phrase><phrase role="number">42</phrase><phrase role="special">),</phrase>
+  <phrase role="special">[](</phrase><phrase role="keyword">const</phrase> <phrase role="identifier">c_api_t</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">o</phrase><phrase role="special">)</phrase> <phrase role="special">{</phrase> <phrase role="keyword">return</phrase> <phrase role="identifier">c_api_object_copy</phrase><phrase role="special">(&amp;</phrase><phrase role="identifier">o</phrase><phrase role="special">);},</phrase>
+  <phrase role="special">[](</phrase><phrase role="keyword">const</phrase> <phrase role="identifier">c_api_p</phrase><phrase role="special">*</phrase> <phrase role="identifier">p</phrase><phrase role="special">)</phrase> <phrase role="special">{</phrase> <phrase role="identifier">c_api_object_dispose</phrase><phrase role="special">(</phrase><phrase role="identifier">p</phrase><phrase role="special">);</phrase> <phrase role="special">}</phrase>
+<phrase role="special">);</phrase>
+</programlisting>
+      <bridgehead renderas="sect4" id="boost_polymorphicvalue__proposed_.tutorial.custom_copiers_and_deleters.h0">
+        <phrase id="boost_polymorphicvalue__proposed_.tutorial.custom_copiers_and_deleters.migrating_from_a__code__phrase_role__identifier__clone__phrase___code__method"/><link linkend="boost_polymorphicvalue__proposed_.tutorial.custom_copiers_and_deleters.migrating_from_a__code__phrase_role__identifier__clone__phrase___code__method">Migrating
+        from a <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">Clone</phrase></computeroutput> method</link>
+      </bridgehead>
+      <para>
+        The pointer constructor can be used to migrate from a class heirarchy with
+        a <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">Clone</phrase></computeroutput> method.
+      </para>
+      <para>
+        Suppose there is a base class that inherits from the mixin <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">Cloneable</phrase></computeroutput>:
+      </para>
+<programlisting xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">template</phrase> <phrase role="special">&lt;</phrase><phrase role="keyword">class</phrase> <phrase role="identifier">T</phrase><phrase role="special">&gt;</phrase>
+<phrase role="keyword">struct</phrase> <phrase role="identifier">Cloneable</phrase> <phrase role="special">{</phrase>
+  <phrase role="keyword">virtual</phrase> <phrase role="special">~</phrase><phrase role="identifier">Cloneable</phrase><phrase role="special">()</phrase> <phrase role="special">=</phrase> <phrase role="keyword">default</phrase><phrase role="special">;</phrase>
+  <phrase role="keyword">virtual</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">unique_ptr</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">T</phrase><phrase role="special">&gt;</phrase> <phrase role="identifier">Clone</phrase><phrase role="special">()</phrase> <phrase role="keyword">const</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase>
+<phrase role="special">};</phrase>
+
+<phrase role="keyword">class</phrase> <phrase role="identifier">Shape</phrase> <phrase role="special">:</phrase> <phrase role="keyword">public</phrase> <phrase role="identifier">Cloneable</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">Shape</phrase><phrase role="special">&gt;</phrase> <phrase role="special">{</phrase>
+ <phrase role="keyword">public</phrase><phrase role="special">:</phrase>
+  <phrase role="keyword">virtual</phrase> <phrase role="special">~</phrase><phrase role="identifier">Shape</phrase><phrase role="special">()</phrase> <phrase role="special">=</phrase> <phrase role="keyword">default</phrase><phrase role="special">;</phrase>
+  <phrase role="comment">// ... </phrase>
+<phrase role="special">};</phrase>
+</programlisting>
+      <para>
+        We can use the pointer constructor to ensure that <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput>
+        calls the clone method.
+      </para>
+<programlisting xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">unique_ptr</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">Shape</phrase><phrase role="special">&gt;</phrase> <phrase role="identifier">s</phrase> <phrase role="special">=</phrase> <phrase role="identifier">shape_factory</phrase><phrase role="special">(</phrase><phrase role="string">"Ellipse"</phrase><phrase role="special">);</phrase>
+<phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">Shape</phrase><phrase role="special">&gt;</phrase> <phrase role="identifier">pv</phrase><phrase role="special">(</phrase>
+  <phrase role="identifier">s</phrase><phrase role="special">.</phrase><phrase role="identifier">release</phrase><phrase role="special">(),</phrase>
+  <phrase role="special">[](</phrase><phrase role="keyword">const</phrase> <phrase role="identifier">Shape</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">o</phrase><phrase role="special">)</phrase> <phrase role="special">{</phrase> <phrase role="keyword">return</phrase> <phrase role="identifier">o</phrase><phrase role="special">.</phrase><phrase role="identifier">Clone</phrase><phrase role="special">().</phrase><phrase role="identifier">release</phrase><phrase role="special">();</phrase> <phrase role="special">},</phrase>
+<phrase role="special">);</phrase>
+</programlisting>
+      <para>
+        Once <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">Clone</phrase></computeroutput> is only used within
+        <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">polymorphic_value</phrase></computeroutput> we can
+        modify <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">Shape</phrase></computeroutput> to make it copyable.
+      </para>
+<programlisting xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">class</phrase> <phrase role="identifier">Shape</phrase> <phrase role="special">{</phrase>
+ <phrase role="keyword">public</phrase><phrase role="special">:</phrase>
+  <phrase role="keyword">virtual</phrase> <phrase role="special">~</phrase><phrase role="identifier">Shape</phrase><phrase role="special">()</phrase> <phrase role="special">=</phrase> <phrase role="keyword">default</phrase><phrase role="special">;</phrase>
+  <phrase role="identifier">Shape</phrase><phrase role="special">(</phrase><phrase role="keyword">const</phrase> <phrase role="identifier">Shape</phrase><phrase role="special">&amp;)</phrase> <phrase role="special">=</phrase> <phrase role="keyword">default</phrase><phrase role="special">;</phrase>
+  <phrase role="identifier">Shape</phrase><phrase role="special">(</phrase><phrase role="identifier">Shape</phrase><phrase role="special">&amp;&amp;)</phrase> <phrase role="special">=</phrase> <phrase role="keyword">default</phrase><phrase role="special">;</phrase>
+  <phrase role="identifier">Shape</phrase><phrase role="special">&amp;</phrase> <phrase role="keyword">operator</phrase><phrase role="special">=(</phrase><phrase role="keyword">const</phrase> <phrase role="identifier">Shape</phrase><phrase role="special">&amp;)</phrase> <phrase role="special">=</phrase> <phrase role="keyword">default</phrase><phrase role="special">;</phrase>
+  <phrase role="identifier">Shape</phrase><phrase role="special">&amp;</phrase> <phrase role="keyword">operator</phrase><phrase role="special">=(</phrase><phrase role="identifier">Shape</phrase><phrase role="special">&amp;&amp;)</phrase> <phrase role="special">=</phrase> <phrase role="keyword">default</phrase><phrase role="special">;</phrase>
+  <phrase role="comment">// ... </phrase>
+<phrase role="special">};</phrase>
+
+<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">unique_ptr</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">Shape</phrase><phrase role="special">&gt;</phrase> <phrase role="identifier">s</phrase> <phrase role="special">=</phrase> <phrase role="identifier">shape_factory</phrase><phrase role="special">(</phrase><phrase role="string">"Ellipse"</phrase><phrase role="special">);</phrase>
+<phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">Shape</phrase><phrase role="special">&gt;</phrase> <phrase role="identifier">pv</phrase><phrase role="special">(</phrase><phrase role="identifier">s</phrase><phrase role="special">.</phrase><phrase role="identifier">release</phrase><phrase role="special">());</phrase>
+</programlisting>
+    </section>
+  </section>
+  <section id="boost_polymorphicvalue__proposed_.type_requirements">
+    <title><link linkend="boost_polymorphicvalue__proposed_.type_requirements">Type
+    Requirements</link></title>
+    <para>
+      For:
+    </para>
+<programlisting xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">class</phrase> <phrase role="identifier">MyClass</phrase> <phrase role="special">{</phrase>
+  <phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">T</phrase><phrase role="special">&gt;</phrase> <phrase role="identifier">component_</phrase><phrase role="special">;</phrase>
+<phrase role="special">};</phrase>
+</programlisting>
+    <itemizedlist>
+      <listitem>
+        <simpara>
+          <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">T</phrase></computeroutput> must be a non-union class
+          type.
+        </simpara>
+      </listitem>
+      <listitem>
+        <simpara>
+          <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">T</phrase></computeroutput> can be an incomplete
+          type.
+        </simpara>
+      </listitem>
+    </itemizedlist>
+    <para>
+      For:
+    </para>
+<programlisting xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">U</phrase> <phrase role="identifier">u</phrase><phrase role="special">;</phrase>
+<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">T</phrase><phrase role="special">&gt;</phrase> <phrase role="identifier">pv</phrase><phrase role="special">(</phrase><phrase role="identifier">u</phrase><phrase role="special">);</phrase>
+</programlisting>
+    <para>
+      and:
+    </para>
+<programlisting xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">T</phrase><phrase role="special">&gt;</phrase> <phrase role="identifier">pv</phrase><phrase role="special">(</phrase><phrase role="identifier">U</phrase><phrase role="special">{});</phrase>
+</programlisting>
+    <itemizedlist>
+      <listitem>
+        <simpara>
+          <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">U</phrase><phrase role="special">*</phrase></computeroutput>
+          must be convertible to <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">T</phrase><phrase role="special">*</phrase></computeroutput>.
+        </simpara>
+      </listitem>
+      <listitem>
+        <simpara>
+          <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">U</phrase></computeroutput> must be <emphasis>CopyConstructible</emphasis>.
+        </simpara>
+      </listitem>
+      <listitem>
+        <simpara>
+          <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">U</phrase></computeroutput> must be nothrow destructible.
+        </simpara>
+      </listitem>
+    </itemizedlist>
+    <para>
+      For:
+    </para>
+<programlisting xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">U</phrase><phrase role="special">*</phrase> <phrase role="identifier">pu</phrase> <phrase role="special">=</phrase> <phrase role="identifier">make_some_u</phrase><phrase role="special">();</phrase>
+<phrase role="identifier">Copier</phrase> <phrase role="identifier">c</phrase><phrase role="special">;</phrase>
+<phrase role="identifier">Deleter</phrase> <phrase role="identifier">d</phrase><phrase role="special">;</phrase>
+<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">polymorphic_value</phrase><phrase role="special">&lt;</phrase><phrase role="identifier">T</phrase><phrase role="special">&gt;(</phrase><phrase role="identifier">pu</phrase><phrase role="special">,</phrase> <phrase role="identifier">c</phrase><phrase role="special">,</phrase> <phrase role="identifier">d</phrase><phrase role="special">);</phrase>
+</programlisting>
+    <itemizedlist>
+      <listitem>
+        <simpara>
+          <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">U</phrase><phrase role="special">*</phrase></computeroutput>
+          must be convertible to <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">T</phrase><phrase role="special">*</phrase></computeroutput>.
+        </simpara>
+      </listitem>
+      <listitem>
+        <simpara>
+          <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">c</phrase><phrase role="special">(*</phrase><phrase role="identifier">u</phrase><phrase role="special">)</phrase></computeroutput> must
+          be well-formed and must return an object that can be converted to, and
+          stored as a <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">T</phrase><phrase role="special">*</phrase></computeroutput>.
+        </simpara>
+      </listitem>
+      <listitem>
+        <simpara>
+          <computeroutput xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="identifier">d</phrase><phrase role="special">(</phrase><phrase role="identifier">u</phrase><phrase role="special">)</phrase></computeroutput> must
+          be well-formed and must not throw an exception.
+        </simpara>
+      </listitem>
+    </itemizedlist>
+  </section>
+  <section id="polymorphic_value_reference"><title>polymorphic_value_reference</title><section id="header.boost.polymorphic_value_hpp"><title>Header &lt;<ulink url="../../boost/polymorphic_value.hpp">boost/polymorphic_value.hpp</ulink>&gt;</title><synopsis xmlns:xi="http://www.w3.org/2001/XInclude"><phrase role="keyword">namespace</phrase> <phrase role="identifier">boost</phrase> <phrase role="special">{</phrase>
+  <phrase role="keyword">class</phrase> <link linkend="boost.bad_polymo_idm526099029600">bad_polymorphic_value_construction</link><phrase role="special">;</phrase>
+
+  <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> T<phrase role="special">&gt;</phrase> <phrase role="keyword">struct</phrase> <link linkend="boost.default_copy">default_copy</link><phrase role="special">;</phrase>
+  <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> T<phrase role="special">&gt;</phrase> <phrase role="keyword">struct</phrase> <link linkend="boost.default_delete">default_delete</link><phrase role="special">;</phrase>
+
+  <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> cT<phrase role="special">&gt;</phrase> <phrase role="keyword">class</phrase> <link linkend="boost.polymorphic_value">polymorphic_value</link><phrase role="special">;</phrase>
+  <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> T<phrase role="special">,</phrase> <phrase role="keyword">class</phrase><phrase role="special">...</phrase> Ts<phrase role="special">&gt;</phrase> 
+    <link linkend="boost.polymorphic_value">polymorphic_value</link><phrase role="special">&lt;</phrase> <phrase role="identifier">T</phrase> <phrase role="special">&gt;</phrase> <anchor id="boost.make_polymorphic_value"/><phrase role="identifier">make_polymorphic_value</phrase><phrase role="special">(</phrase><phrase role="identifier">Ts</phrase> <phrase role="special">&amp;&amp;</phrase><phrase role="special">...</phrase> ts<phrase role="special">)</phrase><phrase role="special">;</phrase>
+  <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> T<phrase role="special">&gt;</phrase> 
+    <phrase role="keyword">void</phrase> <anchor id="boost.swap"/><phrase role="identifier">swap</phrase><phrase role="special">(</phrase><link linkend="boost.polymorphic_value">polymorphic_value</link><phrase role="special">&lt;</phrase> <phrase role="identifier">T</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;</phrase> t<phrase role="special">,</phrase> <link linkend="boost.polymorphic_value">polymorphic_value</link><phrase role="special">&lt;</phrase> <phrase role="identifier">T</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;</phrase> u<phrase role="special">)</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase></synopsis>
+<refentry xmlns:xi="http://www.w3.org/2001/XInclude" id="boost.bad_polymo_idm526099029600"><refmeta><refentrytitle>Class bad_polymorphic_value_construction</refentrytitle><manvolnum>3</manvolnum></refmeta><refnamediv><refname>boost::bad_polymorphic_value_construction</refname><refpurpose/></refnamediv><refsynopsisdiv><synopsis><phrase role="comment">// In header: &lt;<link linkend="header.boost.polymorphic_value_hpp">boost/polymorphic_value.hpp</link>&gt;
+
+</phrase>
+<phrase role="keyword">class</phrase> <link linkend="boost.bad_polymo_idm526099029600">bad_polymorphic_value_construction</link> <phrase role="special">:</phrase> <phrase role="keyword">private</phrase> <phrase role="identifier">exception</phrase> <phrase role="special">{</phrase>
+<phrase role="keyword">public</phrase><phrase role="special">:</phrase>
+  <phrase role="comment">// <link linkend="boost.bad_polymo_idm526099029600construct-copy-destruct">construct/copy/destruct</link></phrase>
+  <link linkend="idm526098959840-bb"><phrase role="identifier">bad_polymorphic_value_construction</phrase></link><phrase role="special">(</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase>
+
+  <phrase role="comment">// <link linkend="idm526098961408-bb">public member functions</link></phrase>
+  <phrase role="keyword">const</phrase> <phrase role="keyword">char</phrase> <phrase role="special">*</phrase> <link linkend="idm526098960928-bb"><phrase role="identifier">what</phrase></link><phrase role="special">(</phrase><phrase role="special">)</phrase> <phrase role="keyword">const</phrase> <phrase role="keyword">noexcept</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase><phrase role="special">;</phrase></synopsis></refsynopsisdiv><refsect1><title>Description</title><refsect2><title><anchor id="boost.bad_polymo_idm526099029600construct-copy-destruct"/><computeroutput>bad_polymorphic_value_construction</computeroutput> 
+        public
+       construct/copy/destruct</title><orderedlist><listitem><para><literallayout class="monospaced"><anchor id="idm526098959840-bb"/><phrase role="identifier">bad_polymorphic_value_construction</phrase><phrase role="special">(</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase></literallayout></para></listitem></orderedlist></refsect2><refsect2><title><anchor id="idm526098961408-bb"/><computeroutput>bad_polymorphic_value_construction</computeroutput> public member functions</title><orderedlist><listitem><para><literallayout class="monospaced"><phrase role="keyword">const</phrase> <phrase role="keyword">char</phrase> <phrase role="special">*</phrase> <anchor id="idm526098960928-bb"/><phrase role="identifier">what</phrase><phrase role="special">(</phrase><phrase role="special">)</phrase> <phrase role="keyword">const</phrase> <phrase role="keyword">noexcept</phrase><phrase role="special">;</phrase></literallayout></para></listitem></orderedlist></refsect2></refsect1></refentry><refentry xmlns:xi="http://www.w3.org/2001/XInclude" id="boost.default_copy"><refmeta><refentrytitle>Struct template default_copy</refentrytitle><manvolnum>3</manvolnum></refmeta><refnamediv><refname>boost::default_copy</refname><refpurpose/></refnamediv><refsynopsisdiv><synopsis><phrase role="comment">// In header: &lt;<link linkend="header.boost.polymorphic_value_hpp">boost/polymorphic_value.hpp</link>&gt;
+
+</phrase><phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> T<phrase role="special">&gt;</phrase> 
+<phrase role="keyword">struct</phrase> <link linkend="boost.default_copy">default_copy</link> <phrase role="special">{</phrase>
+
+  <phrase role="comment">// <link linkend="idm526098958496-bb">public member functions</link></phrase>
+  <phrase role="identifier">T</phrase> <phrase role="special">*</phrase> <link linkend="idm526098958016-bb"><phrase role="keyword">operator</phrase><phrase role="special">(</phrase><phrase role="special">)</phrase></link><phrase role="special">(</phrase><phrase role="keyword">const</phrase> <phrase role="identifier">T</phrase> <phrase role="special">&amp;</phrase><phrase role="special">)</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase><phrase role="special">;</phrase></synopsis></refsynopsisdiv><refsect1><title>Description</title><refsect2><title><anchor id="idm526098958496-bb"/><computeroutput>default_copy</computeroutput> public member functions</title><orderedlist><listitem><para><literallayout class="monospaced"><phrase role="identifier">T</phrase> <phrase role="special">*</phrase> <anchor id="idm526098958016-bb"/><phrase role="keyword">operator</phrase><phrase role="special">(</phrase><phrase role="special">)</phrase><phrase role="special">(</phrase><phrase role="keyword">const</phrase> <phrase role="identifier">T</phrase> <phrase role="special">&amp;</phrase> t<phrase role="special">)</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase></literallayout></para></listitem></orderedlist></refsect2></refsect1></refentry><refentry xmlns:xi="http://www.w3.org/2001/XInclude" id="boost.default_delete"><refmeta><refentrytitle>Struct template default_delete</refentrytitle><manvolnum>3</manvolnum></refmeta><refnamediv><refname>boost::default_delete</refname><refpurpose/></refnamediv><refsynopsisdiv><synopsis><phrase role="comment">// In header: &lt;<link linkend="header.boost.polymorphic_value_hpp">boost/polymorphic_value.hpp</link>&gt;
+
+</phrase><phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> T<phrase role="special">&gt;</phrase> 
+<phrase role="keyword">struct</phrase> <link linkend="boost.default_delete">default_delete</link> <phrase role="special">{</phrase>
+
+  <phrase role="comment">// <link linkend="idm526098955232-bb">public member functions</link></phrase>
+  <phrase role="keyword">void</phrase> <link linkend="idm526098954752-bb"><phrase role="keyword">operator</phrase><phrase role="special">(</phrase><phrase role="special">)</phrase></link><phrase role="special">(</phrase><phrase role="keyword">const</phrase> <phrase role="identifier">T</phrase> <phrase role="special">*</phrase><phrase role="special">)</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase><phrase role="special">;</phrase></synopsis></refsynopsisdiv><refsect1><title>Description</title><refsect2><title><anchor id="idm526098955232-bb"/><computeroutput>default_delete</computeroutput> public member functions</title><orderedlist><listitem><para><literallayout class="monospaced"><phrase role="keyword">void</phrase> <anchor id="idm526098954752-bb"/><phrase role="keyword">operator</phrase><phrase role="special">(</phrase><phrase role="special">)</phrase><phrase role="special">(</phrase><phrase role="keyword">const</phrase> <phrase role="identifier">T</phrase> <phrase role="special">*</phrase> t<phrase role="special">)</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase></literallayout></para></listitem></orderedlist></refsect2></refsect1></refentry><refentry xmlns:xi="http://www.w3.org/2001/XInclude" id="boost.polymorphic_value"><refmeta><refentrytitle>Class template polymorphic_value</refentrytitle><manvolnum>3</manvolnum></refmeta><refnamediv><refname>boost::polymorphic_value</refname><refpurpose/></refnamediv><refsynopsisdiv><synopsis><phrase role="comment">// In header: &lt;<link linkend="header.boost.polymorphic_value_hpp">boost/polymorphic_value.hpp</link>&gt;
+
+</phrase><phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> cT<phrase role="special">&gt;</phrase> 
+<phrase role="keyword">class</phrase> <link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">{</phrase>
+<phrase role="keyword">public</phrase><phrase role="special">:</phrase>
+  <phrase role="comment">// <link linkend="boost.polymorphic_valueconstruct-copy-destruct">construct/copy/destruct</link></phrase>
+  <link linkend="idm526098940320-bb"><phrase role="identifier">polymorphic_value</phrase></link><phrase role="special">(</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase>
+  <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> U<phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> C <phrase role="special">=</phrase> <link linkend="boost.default_copy">default_copy</link><phrase role="special">&lt;</phrase><phrase role="identifier">U</phrase><phrase role="special">&gt;</phrase><phrase role="special">,</phrase> 
+           <phrase role="keyword">typename</phrase> D <phrase role="special">=</phrase> <link linkend="boost.default_delete">default_delete</link><phrase role="special">&lt;</phrase><phrase role="identifier">U</phrase><phrase role="special">&gt;</phrase> <phrase role="special">&gt;</phrase> 
+    <phrase role="keyword">explicit</phrase> <link linkend="idm526098940064-bb"><phrase role="identifier">polymorphic_value</phrase></link><phrase role="special">(</phrase><phrase role="identifier">U</phrase> <phrase role="special">*</phrase><phrase role="special">,</phrase> <phrase role="identifier">C</phrase> <phrase role="special">=</phrase> <phrase role="identifier">C</phrase><phrase role="special">{</phrase><phrase role="special">}</phrase><phrase role="special">,</phrase> <phrase role="identifier">D</phrase> <phrase role="special">=</phrase> <phrase role="identifier">D</phrase><phrase role="special">{</phrase><phrase role="special">}</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase>
+  <link linkend="idm526098930048-bb"><phrase role="identifier">polymorphic_value</phrase></link><phrase role="special">(</phrase><phrase role="keyword">const</phrase> <link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase>
+  <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> U<phrase role="special">&gt;</phrase> <link linkend="idm526098928800-bb"><phrase role="identifier">polymorphic_value</phrase></link><phrase role="special">(</phrase><phrase role="keyword">const</phrase> <link linkend="boost.polymorphic_value">polymorphic_value</link><phrase role="special">&lt;</phrase> <phrase role="identifier">U</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase>
+  <link linkend="idm526098924896-bb"><phrase role="identifier">polymorphic_value</phrase></link><phrase role="special">(</phrase><link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;&amp;</phrase><phrase role="special">)</phrase> <phrase role="keyword">noexcept</phrase><phrase role="special">;</phrase>
+  <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> U<phrase role="special">&gt;</phrase> <link linkend="idm526098923552-bb"><phrase role="identifier">polymorphic_value</phrase></link><phrase role="special">(</phrase><link linkend="boost.polymorphic_value">polymorphic_value</link><phrase role="special">&lt;</phrase> <phrase role="identifier">U</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;&amp;</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase>
+  <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> U<phrase role="special">&gt;</phrase> <link linkend="idm526098919776-bb"><phrase role="identifier">polymorphic_value</phrase></link><phrase role="special">(</phrase><phrase role="identifier">U</phrase> <phrase role="special">&amp;&amp;</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase>
+  <link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;</phrase> <link linkend="idm526098915904-bb"><phrase role="keyword">operator</phrase><phrase role="special">=</phrase></link><phrase role="special">(</phrase><phrase role="keyword">const</phrase> <link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase>
+  <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> U<phrase role="special">&gt;</phrase> 
+    <link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;</phrase> <link linkend="idm526098914144-bb"><phrase role="keyword">operator</phrase><phrase role="special">=</phrase></link><phrase role="special">(</phrase><phrase role="keyword">const</phrase> <link linkend="boost.polymorphic_value">polymorphic_value</link><phrase role="special">&lt;</phrase> <phrase role="identifier">U</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase>
+  <link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;</phrase> <link linkend="idm526098909728-bb"><phrase role="keyword">operator</phrase><phrase role="special">=</phrase></link><phrase role="special">(</phrase><link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;&amp;</phrase><phrase role="special">)</phrase> <phrase role="keyword">noexcept</phrase><phrase role="special">;</phrase>
+  <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> U<phrase role="special">&gt;</phrase> 
+    <link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;</phrase> <link linkend="idm526098907872-bb"><phrase role="keyword">operator</phrase><phrase role="special">=</phrase></link><phrase role="special">(</phrase><link linkend="boost.polymorphic_value">polymorphic_value</link><phrase role="special">&lt;</phrase> <phrase role="identifier">U</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;&amp;</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase>
+  <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> U<phrase role="special">&gt;</phrase> <link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;</phrase> <link linkend="idm526098903584-bb"><phrase role="keyword">operator</phrase><phrase role="special">=</phrase></link><phrase role="special">(</phrase><phrase role="identifier">U</phrase> <phrase role="special">&amp;&amp;</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase>
+  <link linkend="idm526098940576-bb"><phrase role="special">~</phrase><phrase role="identifier">polymorphic_value</phrase></link><phrase role="special">(</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase>
+
+  <phrase role="comment">// <link linkend="idm526098951968-bb">public member functions</link></phrase>
+  <phrase role="keyword">void</phrase> <link linkend="idm526098951488-bb"><phrase role="identifier">swap</phrase></link><phrase role="special">(</phrase><link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;</phrase><phrase role="special">)</phrase> <phrase role="keyword">noexcept</phrase><phrase role="special">;</phrase>
+  <phrase role="keyword">explicit</phrase> <link linkend="idm526098949664-bb"><phrase role="keyword">operator</phrase> <phrase role="keyword">bool</phrase></link><phrase role="special">(</phrase><phrase role="special">)</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase>
+  <phrase role="keyword">const</phrase> <phrase role="identifier">T</phrase> <phrase role="special">*</phrase> <link linkend="idm526098948096-bb"><phrase role="keyword">operator</phrase><phrase role="special">-&gt;</phrase></link><phrase role="special">(</phrase><phrase role="special">)</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase>
+  <phrase role="keyword">const</phrase> <phrase role="identifier">T</phrase> <phrase role="special">&amp;</phrase> <link linkend="idm526098946752-bb"><phrase role="identifier">value</phrase></link><phrase role="special">(</phrase><phrase role="special">)</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase>
+  <phrase role="keyword">const</phrase> <phrase role="identifier">T</phrase> <phrase role="special">&amp;</phrase> <link linkend="idm526098945408-bb"><phrase role="keyword">operator</phrase><phrase role="special">*</phrase></link><phrase role="special">(</phrase><phrase role="special">)</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase>
+  <phrase role="identifier">T</phrase> <phrase role="special">*</phrase> <link linkend="idm526098944064-bb"><phrase role="keyword">operator</phrase><phrase role="special">-&gt;</phrase></link><phrase role="special">(</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase>
+  <phrase role="identifier">T</phrase> <phrase role="special">&amp;</phrase> <link linkend="idm526098942944-bb"><phrase role="identifier">value</phrase></link><phrase role="special">(</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase>
+  <phrase role="identifier">T</phrase> <phrase role="special">&amp;</phrase> <link linkend="idm526098941824-bb"><phrase role="keyword">operator</phrase><phrase role="special">*</phrase></link><phrase role="special">(</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase><phrase role="special">;</phrase></synopsis></refsynopsisdiv><refsect1><title>Description</title><refsect2><title><anchor id="boost.polymorphic_valueconstruct-copy-destruct"/><computeroutput>polymorphic_value</computeroutput> 
+        public
+       construct/copy/destruct</title><orderedlist><listitem><para><literallayout class="monospaced"><anchor id="idm526098940320-bb"/><phrase role="identifier">polymorphic_value</phrase><phrase role="special">(</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase></literallayout></para></listitem><listitem><para><literallayout class="monospaced"><phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> U<phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> C <phrase role="special">=</phrase> <link linkend="boost.default_copy">default_copy</link><phrase role="special">&lt;</phrase><phrase role="identifier">U</phrase><phrase role="special">&gt;</phrase><phrase role="special">,</phrase> 
+         <phrase role="keyword">typename</phrase> D <phrase role="special">=</phrase> <link linkend="boost.default_delete">default_delete</link><phrase role="special">&lt;</phrase><phrase role="identifier">U</phrase><phrase role="special">&gt;</phrase> <phrase role="special">&gt;</phrase> 
+  <phrase role="keyword">explicit</phrase> <anchor id="idm526098940064-bb"/><phrase role="identifier">polymorphic_value</phrase><phrase role="special">(</phrase><phrase role="identifier">U</phrase> <phrase role="special">*</phrase> u<phrase role="special">,</phrase> <phrase role="identifier">C</phrase> copier <phrase role="special">=</phrase> <phrase role="identifier">C</phrase><phrase role="special">{</phrase><phrase role="special">}</phrase><phrase role="special">,</phrase> <phrase role="identifier">D</phrase> deleter <phrase role="special">=</phrase> <phrase role="identifier">D</phrase><phrase role="special">{</phrase><phrase role="special">}</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase></literallayout></para><para>requires <computeroutput>U*</computeroutput> is convertible to <computeroutput>T*</computeroutput>. If <computeroutput>C</computeroutput> is <computeroutput><computeroutput><link linkend="boost.default_copy">default_copy</link></computeroutput>&lt;U&gt;</computeroutput> and <computeroutput>D</computeroutput> is <computeroutput><computeroutput><link linkend="boost.default_delete">default_delete</link></computeroutput>&lt;U&gt;</computeroutput>, requires <computeroutput>typeid(*u) == typeid(U)</computeroutput>. </para></listitem><listitem><para><literallayout class="monospaced"><anchor id="idm526098930048-bb"/><phrase role="identifier">polymorphic_value</phrase><phrase role="special">(</phrase><phrase role="keyword">const</phrase> <link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;</phrase> p<phrase role="special">)</phrase><phrase role="special">;</phrase></literallayout></para></listitem><listitem><para><literallayout class="monospaced"><phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> U<phrase role="special">&gt;</phrase> <anchor id="idm526098928800-bb"/><phrase role="identifier">polymorphic_value</phrase><phrase role="special">(</phrase><phrase role="keyword">const</phrase> <link linkend="boost.polymorphic_value">polymorphic_value</link><phrase role="special">&lt;</phrase> <phrase role="identifier">U</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;</phrase> p<phrase role="special">)</phrase><phrase role="special">;</phrase></literallayout></para><para>requires <computeroutput>T</computeroutput> and <computeroutput>U</computeroutput> are different types, <computeroutput>std::remove_const_t&lt;U&gt;*</computeroutput> is convertible to <computeroutput>T*</computeroutput>. </para></listitem><listitem><para><literallayout class="monospaced"><anchor id="idm526098924896-bb"/><phrase role="identifier">polymorphic_value</phrase><phrase role="special">(</phrase><link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;&amp;</phrase> p<phrase role="special">)</phrase> <phrase role="keyword">noexcept</phrase><phrase role="special">;</phrase></literallayout></para></listitem><listitem><para><literallayout class="monospaced"><phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> U<phrase role="special">&gt;</phrase> <anchor id="idm526098923552-bb"/><phrase role="identifier">polymorphic_value</phrase><phrase role="special">(</phrase><link linkend="boost.polymorphic_value">polymorphic_value</link><phrase role="special">&lt;</phrase> <phrase role="identifier">U</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;&amp;</phrase> p<phrase role="special">)</phrase><phrase role="special">;</phrase></literallayout></para><para>requires <computeroutput>T</computeroutput> and <computeroutput>U</computeroutput> are different types, <computeroutput>U*</computeroutput> is convertible to <computeroutput>T*</computeroutput>. </para></listitem><listitem><para><literallayout class="monospaced"><phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> U<phrase role="special">&gt;</phrase> <anchor id="idm526098919776-bb"/><phrase role="identifier">polymorphic_value</phrase><phrase role="special">(</phrase><phrase role="identifier">U</phrase> <phrase role="special">&amp;&amp;</phrase> u<phrase role="special">)</phrase><phrase role="special">;</phrase></literallayout></para><para>requires <computeroutput>std::decay_t&lt;U&gt;</computeroutput> is not a <computeroutput><computeroutput><link linkend="boost.polymorphic_value">polymorphic_value</link></computeroutput></computeroutput>, <computeroutput>std::decay_t&lt;U&gt;*</computeroutput> is convertible to <computeroutput>T*</computeroutput>. </para></listitem><listitem><para><literallayout class="monospaced"><link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;</phrase> <anchor id="idm526098915904-bb"/><phrase role="keyword">operator</phrase><phrase role="special">=</phrase><phrase role="special">(</phrase><phrase role="keyword">const</phrase> <link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;</phrase> p<phrase role="special">)</phrase><phrase role="special">;</phrase></literallayout></para></listitem><listitem><para><literallayout class="monospaced"><phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> U<phrase role="special">&gt;</phrase> 
+  <link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;</phrase> <anchor id="idm526098914144-bb"/><phrase role="keyword">operator</phrase><phrase role="special">=</phrase><phrase role="special">(</phrase><phrase role="keyword">const</phrase> <link linkend="boost.polymorphic_value">polymorphic_value</link><phrase role="special">&lt;</phrase> <phrase role="identifier">U</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;</phrase> p<phrase role="special">)</phrase><phrase role="special">;</phrase></literallayout></para><para>requires <computeroutput>T</computeroutput> and <computeroutput>U</computeroutput> are different types, <computeroutput>U*</computeroutput> is convertible to <computeroutput>T*</computeroutput>. </para></listitem><listitem><para><literallayout class="monospaced"><link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;</phrase> <anchor id="idm526098909728-bb"/><phrase role="keyword">operator</phrase><phrase role="special">=</phrase><phrase role="special">(</phrase><link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;&amp;</phrase> p<phrase role="special">)</phrase> <phrase role="keyword">noexcept</phrase><phrase role="special">;</phrase></literallayout></para></listitem><listitem><para><literallayout class="monospaced"><phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> U<phrase role="special">&gt;</phrase> 
+  <link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;</phrase> <anchor id="idm526098907872-bb"/><phrase role="keyword">operator</phrase><phrase role="special">=</phrase><phrase role="special">(</phrase><link linkend="boost.polymorphic_value">polymorphic_value</link><phrase role="special">&lt;</phrase> <phrase role="identifier">U</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;&amp;</phrase> p<phrase role="special">)</phrase><phrase role="special">;</phrase></literallayout></para><para>requires <computeroutput>T</computeroutput> and <computeroutput>U</computeroutput> are different types, <computeroutput>U*</computeroutput> is convertible to <computeroutput>T*</computeroutput>. </para></listitem><listitem><para><literallayout class="monospaced"><phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">typename</phrase> U<phrase role="special">&gt;</phrase> <link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;</phrase> <anchor id="idm526098903584-bb"/><phrase role="keyword">operator</phrase><phrase role="special">=</phrase><phrase role="special">(</phrase><phrase role="identifier">U</phrase> <phrase role="special">&amp;&amp;</phrase> u<phrase role="special">)</phrase><phrase role="special">;</phrase></literallayout></para><para>requires <computeroutput>std::decay_t&lt;U&gt;</computeroutput> is not a <computeroutput><computeroutput><link linkend="boost.polymorphic_value">polymorphic_value</link></computeroutput></computeroutput>, <computeroutput>std::decay_t&lt;U&gt;*</computeroutput> is convertible to <computeroutput>T*</computeroutput>. </para></listitem><listitem><para><literallayout class="monospaced"><anchor id="idm526098940576-bb"/><phrase role="special">~</phrase><phrase role="identifier">polymorphic_value</phrase><phrase role="special">(</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase></literallayout></para></listitem></orderedlist></refsect2><refsect2><title><anchor id="idm526098951968-bb"/><computeroutput>polymorphic_value</computeroutput> public member functions</title><orderedlist><listitem><para><literallayout class="monospaced"><phrase role="keyword">void</phrase> <anchor id="idm526098951488-bb"/><phrase role="identifier">swap</phrase><phrase role="special">(</phrase><link linkend="boost.polymorphic_value">polymorphic_value</link> <phrase role="special">&amp;</phrase> p<phrase role="special">)</phrase> <phrase role="keyword">noexcept</phrase><phrase role="special">;</phrase></literallayout></para></listitem><listitem><para><literallayout class="monospaced"><phrase role="keyword">explicit</phrase> <anchor id="idm526098949664-bb"/><phrase role="keyword">operator</phrase> <phrase role="keyword">bool</phrase><phrase role="special">(</phrase><phrase role="special">)</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase></literallayout></para><para>returns true if there is a managed object, otherwise returns false. </para></listitem><listitem><para><literallayout class="monospaced"><phrase role="keyword">const</phrase> <phrase role="identifier">T</phrase> <phrase role="special">*</phrase> <anchor id="idm526098948096-bb"/><phrase role="keyword">operator</phrase><phrase role="special">-&gt;</phrase><phrase role="special">(</phrase><phrase role="special">)</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase></literallayout></para><para>requires a managed object. </para></listitem><listitem><para><literallayout class="monospaced"><phrase role="keyword">const</phrase> <phrase role="identifier">T</phrase> <phrase role="special">&amp;</phrase> <anchor id="idm526098946752-bb"/><phrase role="identifier">value</phrase><phrase role="special">(</phrase><phrase role="special">)</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase></literallayout></para><para>requires a managed object. </para></listitem><listitem><para><literallayout class="monospaced"><phrase role="keyword">const</phrase> <phrase role="identifier">T</phrase> <phrase role="special">&amp;</phrase> <anchor id="idm526098945408-bb"/><phrase role="keyword">operator</phrase><phrase role="special">*</phrase><phrase role="special">(</phrase><phrase role="special">)</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase></literallayout></para><para>requires a managed object. </para></listitem><listitem><para><literallayout class="monospaced"><phrase role="identifier">T</phrase> <phrase role="special">*</phrase> <anchor id="idm526098944064-bb"/><phrase role="keyword">operator</phrase><phrase role="special">-&gt;</phrase><phrase role="special">(</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase></literallayout></para><para>requires a managed object. </para></listitem><listitem><para><literallayout class="monospaced"><phrase role="identifier">T</phrase> <phrase role="special">&amp;</phrase> <anchor id="idm526098942944-bb"/><phrase role="identifier">value</phrase><phrase role="special">(</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase></literallayout></para><para>requires a managed object. </para></listitem><listitem><para><literallayout class="monospaced"><phrase role="identifier">T</phrase> <phrase role="special">&amp;</phrase> <anchor id="idm526098941824-bb"/><phrase role="keyword">operator</phrase><phrase role="special">*</phrase><phrase role="special">(</phrase><phrase role="special">)</phrase><phrase role="special">;</phrase></literallayout></para><para>requires a managed object. </para></listitem></orderedlist></refsect2></refsect1></refentry>
+</section>
+</section>
+</chapter>

@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="namespaceboost_1_1detail" kind="namespace" language="C++">
+    <compoundname>boost::detail</compoundname>
+    <innerclass refid="structboost_1_1detail_1_1control__block" prot="public">boost::detail::control_block</innerclass>
+    <innerclass refid="classboost_1_1detail_1_1delegating__control__block" prot="public">boost::detail::delegating_control_block</innerclass>
+    <innerclass refid="classboost_1_1detail_1_1direct__control__block" prot="public">boost::detail::direct_control_block</innerclass>
+    <innerclass refid="structboost_1_1detail_1_1is__polymorphic__value" prot="public">boost::detail::is_polymorphic_value</innerclass>
+    <innerclass refid="structboost_1_1detail_1_1is__polymorphic__value_3_01polymorphic__value_3_01_t_01_4_01_4" prot="public">boost::detail::is_polymorphic_value&lt; polymorphic_value&lt; T &gt; &gt;</innerclass>
+    <innerclass refid="classboost_1_1detail_1_1pointer__control__block" prot="public">boost::detail::pointer_control_block</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/Users/jon/DEV/polymorphic_value/include/boost/polymorphic_value.hpp" line="53" column="1"/>
+  </compounddef>
+</doxygen>
