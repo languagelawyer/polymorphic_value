@@ -22,13 +22,14 @@
         A <code class="computeroutput"><span class="identifier">polymorphic_value</span></code> member
         can be used with the same syntax one would use for a pointer member: <code class="computeroutput"><span class="keyword">operator</span><span class="special">-&gt;</span></code>
         and <code class="computeroutput"><span class="keyword">operator</span><span class="special">*</span></code>
-        will respectively return a pointer and a reference. Like a pointer, <code class="computeroutput"><span class="identifier">polymorphic_value</span></code> can be null so should
-        probably be initialised within the parent object constructor.
+        will respectively return a pointer and a reference. Like a pointer, <code class="computeroutput"><span class="identifier">polymorphic_value</span></code> can be null so, when
+        used as a member variable, should probably be initialised within the parent
+        object constructor.
       </p>
 <p>
         <code class="computeroutput"><span class="identifier">polymorphic_value</span></code> has value
-        semantics: when copied, it will perform a deep copy of the owned object,
-        and it propagates <code class="computeroutput"><span class="keyword">const</span></code> to the
+        semantics: it propagates <code class="computeroutput"><span class="keyword">const</span></code>
+        to the owned object, and when copied, it will perform a deep copy of the
         owned object.
       </p>
 <h5>
@@ -38,7 +39,7 @@
       </h5>
 <p>
         <code class="computeroutput"><span class="identifier">polymorphic_value</span></code> enables
-        deep-copies through inheritance heirarchies: a <code class="computeroutput"><span class="identifier">polymorphic_value</span><span class="special">&lt;</span><span class="identifier">Shape</span><span class="special">&gt;</span></code> initialized with a <code class="computeroutput"><span class="identifier">Circle</span></code>
+        deep-copies through inheritance hierarchies: a <code class="computeroutput"><span class="identifier">polymorphic_value</span><span class="special">&lt;</span><span class="identifier">Shape</span><span class="special">&gt;</span></code> initialized with a <code class="computeroutput"><span class="identifier">Circle</span></code>
         object will produce a <code class="computeroutput"><span class="identifier">polymorphic_value</span><span class="special">&lt;</span><span class="identifier">Shape</span><span class="special">&gt;</span></code> managing a copy of the <code class="computeroutput"><span class="identifier">Circle</span></code> object produced using <code class="computeroutput"><span class="identifier">Circle</span></code>'s copy constructor.
       </p>
 <p>
@@ -49,7 +50,7 @@
         call the copy constructor when required. Note that virtual destructors are
         not needed for <code class="computeroutput"><span class="identifier">polymorphic_value</span></code>
         as the type-erasure mechanism used to produce copies is also used to call
-        the correct derived class destructor.
+        the correct derived-class destructor.
       </p>
 <h5>
 <a name="boost_polymorphicvalue__proposed_.tutorial.design_overview.h1"></a>
@@ -67,25 +68,16 @@
 <p>
         For design of component-based objects, const-propagation is required as no
         part of a contextually immutable object should be mutable. Where access to
-        a mutable <code class="computeroutput"><span class="identifier">polymorphic_value</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+        a non-<code class="computeroutput"><span class="keyword">const</span></code> <code class="computeroutput"><span class="identifier">polymorphic_value</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
         is truly required from a <code class="computeroutput"><span class="keyword">const</span></code>
         access path, a <code class="computeroutput"><span class="keyword">mutable</span> <span class="identifier">polymorphic_value</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
         member can be used (this should be rare).
       </p>
 <h5>
 <a name="boost_polymorphicvalue__proposed_.tutorial.design_overview.h2"></a>
-        <span class="phrase"><a name="boost_polymorphicvalue__proposed_.tutorial.design_overview.default_construction_and_a_null_state"></a></span><a class="link" href="design_overview.html#boost_polymorphicvalue__proposed_.tutorial.design_overview.default_construction_and_a_null_state">Default
-        construction and a null state</a>
+        <span class="phrase"><a name="boost_polymorphicvalue__proposed_.tutorial.design_overview.default_construction_and_an_empty_state"></a></span><a class="link" href="design_overview.html#boost_polymorphicvalue__proposed_.tutorial.design_overview.default_construction_and_an_empty_state">Default
+        construction and an empty state</a>
       </h5>
-<p>
-        <code class="computeroutput"><span class="identifier">polymorphic_value</span></code> is intended
-        to be used with Standard Library collections which requires that it is default
-        constructible. As <code class="computeroutput"><span class="identifier">polymorphic_value</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
-        can be instantiated for an abstract class <code class="computeroutput"><span class="identifier">T</span></code>,
-        the default constructor cannot, in general, default construct the managed
-        object. There may also be cases where default construction of the managed
-        object would be undesirably expensive in terms of memory or speed.
-      </p>
 <p>
         The default constructor puts <code class="computeroutput"><span class="identifier">polymorphic_value</span></code>
         in an empty state where no object is managed. Both <code class="computeroutput"><span class="keyword">operator</span><span class="special">-&gt;</span></code> and <code class="computeroutput"><span class="keyword">operator</span><span class="special">*</span></code> have preconditions where calling them on
@@ -93,6 +85,20 @@
         is prohibited. An <code class="computeroutput"><span class="keyword">explicit</span></code>
         <code class="computeroutput"><span class="keyword">operator</span> <span class="keyword">bool</span></code>
         is provided to allow idiomatic checking for a null state.
+      </p>
+<p>
+        As <code class="computeroutput"><span class="identifier">polymorphic_value</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> can
+        be instantiated for an abstract class <code class="computeroutput"><span class="identifier">T</span></code>,
+        the default constructor cannot, in general, default construct the managed
+        object. There may also be cases where default construction of the managed
+        object would be undesirably expensive in terms of memory or speed.
+      </p>
+<p>
+        Without an empty state there would be no state that a moved-from <code class="computeroutput"><span class="identifier">polymorphic_value</span></code> could be expected to
+        be found in (without incurring the cost of allocation or being required to
+        instantiate abstract classes). Following the pattern of other standard library
+        components we opt to make the moved-from state the same as the default-constructed
+        state.
       </p>
 <h5>
 <a name="boost_polymorphicvalue__proposed_.tutorial.design_overview.h3"></a>
@@ -111,15 +117,15 @@
         later use.
       </p>
 <pre class="programlisting"><span class="comment">// recommended use</span>
-<span class="identifier">polymorphic_value</span><span class="special">&lt;</span><span class="identifier">Shape</span><span class="special">&gt;</span> <span class="identifier">pv</span><span class="special">(</span><span class="identifier">Circle</span><span class="special">(</span><span class="number">8</span><span class="special">));</span>
-<span class="identifier">foo</span><span class="special">(*</span><span class="identifier">pv</span><span class="special">);</span>
+<span class="keyword">auto</span> <span class="identifier">pv</span> <span class="special">=</span> <span class="identifier">make_polymorphic_value</span><span class="special">&lt;</span><span class="identifier">Shape</span><span class="special">,</span> <span class="identifier">Circle</span><span class="special">&gt;(</span><span class="number">8</span><span class="special">);</span>
+<span class="identifier">mutate</span><span class="special">(</span><span class="identifier">pv</span><span class="special">);</span>
 <span class="keyword">double</span> <span class="identifier">area</span> <span class="special">=</span> <span class="identifier">pv</span><span class="special">-&gt;</span><span class="identifier">Area</span><span class="special">();</span>
 
 <span class="comment">// mis-use (pointer stability not guaranteed)</span>
-<span class="identifier">polymorphic_value</span><span class="special">&lt;</span><span class="identifier">Shape</span><span class="special">&gt;</span> <span class="identifier">pv</span><span class="special">(</span><span class="identifier">Circle</span><span class="special">(</span><span class="number">8</span><span class="special">));</span>
+<span class="keyword">auto</span> <span class="identifier">pv</span> <span class="special">=</span> <span class="identifier">make_polymorphic_value</span><span class="special">&lt;</span><span class="identifier">Shape</span><span class="special">,</span> <span class="identifier">Circle</span><span class="special">&gt;(</span><span class="number">8</span><span class="special">);</span>
 <span class="identifier">Shape</span><span class="special">*</span> <span class="identifier">s</span> <span class="special">=</span> <span class="identifier">pv</span><span class="special">.</span><span class="keyword">operator</span><span class="special">-&gt;();</span>
-<span class="identifier">foo</span><span class="special">(*</span><span class="identifier">pv</span><span class="special">);</span>
-<span class="keyword">double</span> <span class="identifier">area</span> <span class="special">=</span> <span class="identifier">s</span><span class="special">-&gt;</span><span class="identifier">Area</span><span class="special">();</span>
+<span class="identifier">mutate</span><span class="special">(</span><span class="identifier">pv</span><span class="special">);</span>
+<span class="keyword">double</span> <span class="identifier">area</span> <span class="special">=</span> <span class="identifier">s</span><span class="special">-&gt;</span><span class="identifier">Area</span><span class="special">();</span> <span class="comment">// mutating operation may render this pointer invalid.</span>
 </pre>
 <p>
         The unnatural looking code that one is required to write to cache a pointer
@@ -129,7 +135,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2017 Jonathan Coe<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2018 Jonathan Coe<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

@@ -7,11 +7,11 @@
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.PolymorphicValue (Proposed)">
 <link rel="up" href="../tutorial.html" title="Tutorial">
 <link rel="prev" href="design_overview.html" title="Design Overview">
-<link rel="next" href="custom_copiers_and_deleters.html" title="Custom copiers and deleters">
+<link rel="next" href="factory_functions.html" title="Factory functions">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <div class="spirit-nav">
-<a accesskey="p" href="design_overview.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="custom_copiers_and_deleters.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="design_overview.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="factory_functions.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -30,27 +30,186 @@
         we would advocate avoiding the unnecessary use of <code class="computeroutput"><span class="identifier">polymorphic_value</span></code>.
       </p>
 <p>
-        If a component design does not require polymorphic components then storing
-        components by value may be a better choice than using <code class="computeroutput"><span class="identifier">polymorphic_value</span></code>.
+        When designing a component-based class there are multiple factors to consider.
+        The table below gives guidance based on requirements for polymorphism, copyability
+        and mutability.
       </p>
-<p>
-        If a component design does not require mutable components then storing components
-        by <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&gt;</span></code> may be a better choice than using <code class="computeroutput"><span class="identifier">polymorphic_value</span></code> (Note the <code class="computeroutput"><span class="keyword">const</span></code>).
-      </p>
-<p>
-        If a component design has component sub-types chosen from a known set of
-        sub-types, then an <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">variant</span><span class="special">&lt;</span><span class="identifier">A</span><span class="special">,</span><span class="identifier">B</span><span class="special">,</span><span class="identifier">C</span><span class="special">&gt;</span></code>
-        may be a better choice than using <code class="computeroutput"><span class="identifier">polymorphic_value</span></code>.
-      </p>
-<p>
-        If a component design requires an open or extensible set of component sub-types,
-        and mutability of components then <code class="computeroutput"><span class="identifier">polymorphic_value</span></code>
-        may be a good choice.
-      </p>
+<div class="table">
+<a name="boost_polymorphicvalue__proposed_.tutorial.when_to_use__polymorphic_value_.t0"></a><p class="title"><b>Table&#160;1.1.&#160;What to use for a component `T`</b></p>
+<div class="table-contents"><table class="table" summary="What to use for a component `T`">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Polymorphism
+                </p>
+              </th>
+<th>
+                <p>
+                  Copyable
+                </p>
+              </th>
+<th>
+                <p>
+                  Mutable
+                </p>
+              </th>
+<th>
+                <p>
+                  Recommend
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  none
+                </p>
+              </td>
+<td>
+              </td>
+<td>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">T</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  compile-time
+                </p>
+              </td>
+<td>
+              </td>
+<td>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  closed-set
+                </p>
+              </td>
+<td>
+              </td>
+<td>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">variant</span><span class="special">&lt;</span><span class="identifier">Ts</span><span class="special">...&gt;</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  open-set
+                </p>
+              </td>
+<td>
+                <p>
+                  no
+                </p>
+              </td>
+<td>
+                <p>
+                  no
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&gt;</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  open-set
+                </p>
+              </td>
+<td>
+                <p>
+                  no
+                </p>
+              </td>
+<td>
+                <p>
+                  yes
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">experimental</span><span class="special">::</span><span class="identifier">propagate_const</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&gt;</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  open-set
+                </p>
+              </td>
+<td>
+                <p>
+                  yes
+                </p>
+              </td>
+<td>
+                <p>
+                  no
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&gt;</span></code>
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  open-set
+                </p>
+              </td>
+<td>
+                <p>
+                  yes
+                </p>
+              </td>
+<td>
+                <p>
+                  yes
+                </p>
+              </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">polymorphic_value</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+                </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2017 Jonathan Coe<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2018 Jonathan Coe<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -58,7 +217,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="design_overview.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="custom_copiers_and_deleters.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="design_overview.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="factory_functions.html"><img src="../../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

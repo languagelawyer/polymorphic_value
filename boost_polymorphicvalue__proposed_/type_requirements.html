@@ -36,23 +36,22 @@
         </li>
 </ul></div>
 <p>
-      For:
+      For: class T { <span class="emphasis"><em>* class body *</em></span> }; class U { <span class="emphasis"><em>*
+      class body *</em></span> };
     </p>
-<pre class="programlisting"><span class="identifier">U</span> <span class="identifier">u</span><span class="special">;</span>
-<span class="identifier">boost</span><span class="special">::</span><span class="identifier">polymorphic_value</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">pv</span><span class="special">(</span><span class="identifier">u</span><span class="special">);</span>
-</pre>
-<p>
-      and:
-    </p>
-<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">polymorphic_value</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">pv</span><span class="special">(</span><span class="identifier">U</span><span class="special">{});</span>
+<pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">poly</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">make_polymorphic_value</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">U</span><span class="special">&gt;(</span><span class="identifier">Ts</span><span class="special">&amp;&amp;...</span> <span class="identifier">ts</span><span class="special">);</span>
 </pre>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-          <code class="computeroutput"><span class="identifier">U</span><span class="special">*</span></code>
-          must be convertible to <code class="computeroutput"><span class="identifier">T</span><span class="special">*</span></code>.
+          <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">remove_const_t</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;*</span></code>
+          must be convertible to <code class="computeroutput"><span class="identifier">T</span><span class="special">*</span></code> (public inheritance satisfies this requirement).
         </li>
 <li class="listitem">
-          <code class="computeroutput"><span class="identifier">U</span></code> must be <span class="emphasis"><em>CopyConstructible</em></span>.
+          <code class="computeroutput"><span class="identifier">U</span></code> must be constructible
+          from <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">Ts</span><span class="special">&gt;(</span><span class="identifier">ts</span><span class="special">)...</span></code>.
+        </li>
+<li class="listitem">
+          <code class="computeroutput"><span class="identifier">U</span></code> must be copy constructible.
         </li>
 <li class="listitem">
           <code class="computeroutput"><span class="identifier">U</span></code> must be nothrow destructible.
@@ -64,7 +63,7 @@
 <pre class="programlisting"><span class="identifier">U</span><span class="special">*</span> <span class="identifier">pu</span> <span class="special">=</span> <span class="identifier">make_some_u</span><span class="special">();</span>
 <span class="identifier">Copier</span> <span class="identifier">c</span><span class="special">;</span>
 <span class="identifier">Deleter</span> <span class="identifier">d</span><span class="special">;</span>
-<span class="identifier">boost</span><span class="special">::</span><span class="identifier">polymorphic_value</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">pu</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">);</span>
+<span class="keyword">auto</span> <span class="identifier">poly</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">assume_polymorphic_value</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">pu</span><span class="special">,</span> <span class="identifier">c</span><span class="special">,</span> <span class="identifier">d</span><span class="special">);</span>
 </pre>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
@@ -84,7 +83,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2017 Jonathan Coe<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2018 Jonathan Coe<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

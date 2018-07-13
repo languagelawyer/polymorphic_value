@@ -19,7 +19,7 @@
 </h3></div></div></div>
 <p>
         Object-oriented programming allows objects to be composed of other objects.
-        A class heirarchy of <code class="computeroutput"><span class="identifier">Shape</span></code>s
+        A class hierarchy of <code class="computeroutput"><span class="identifier">Shape</span></code>s
         might lead to a <code class="computeroutput"><span class="identifier">Picture</span></code> class
         being a collection of <code class="computeroutput"><span class="identifier">Shape</span></code>s
         and their respective positions.
@@ -32,7 +32,7 @@
 <p>
         Storing components as values means that the type of the component must be
         known at compile time. For cases when components are base classes from an
-        inheritance heirarchy - like <code class="computeroutput"><span class="identifier">Shape</span></code>s
+        inheritance hierarchy - like <code class="computeroutput"><span class="identifier">Shape</span></code>s
         in a <code class="computeroutput"><span class="identifier">Picture</span></code> - we are unable
         to store components as values and will have to implement special member functions
         ourselves.
@@ -43,16 +43,10 @@
         allows design of a composite object in terms of abstract or base class objects
         without the need to implement (and maintain) special member functions.
       </p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">Shape</span><span class="special">;</span>
-<span class="keyword">class</span> <span class="identifier">Picture</span> <span class="special">{</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">polymorphic_value</span><span class="special">&lt;</span><span class="identifier">Shape</span><span class="special">&gt;&gt;</span> <span class="identifier">components_</span><span class="special">;</span>
-  <span class="comment">// ...</span>
-<span class="special">};</span>
-</pre>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2017 Jonathan Coe<p>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2018 Jonathan Coe<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
